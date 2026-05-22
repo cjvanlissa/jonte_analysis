@@ -1,0 +1,77 @@
+[External] Re: Following Up — ML Methods in Meta-Analysis + Potential Collaboration
+Jonte Myers<jmyers45@gsu.edu>
+
+​
+Caspar van Lissa​
+​Therese Deocampo Pigott <tpigott@gsu.edu>​
+Dear Caspar,
+
+Thank you so much for your prompt response and willingness to contribute. This is exactly the kind of collaboration I was hoping for.
+
+The revision deadline for Review of Educational Research is August 9, 2026, which I hope gives us a workable window. I can also reach out to the editor if the window is too tight, so we have some flexibility.
+
+The four-part plan you outlined is precisely what I had in mind and positions us well to address the methodological questions head-on. The proposed simulation study, in particular, would be a compelling addition if it proves feasible after you review the implementation.
+
+I have attached the manuscript describing the methods, along with the MERF code to get started. I look forward to hearing your thoughts after you have had a chance to review both. Please let me know if you have any further questions or need any additional information. 
+
+Best,
+Jonté
+From: Caspar van Lissa <C.J.vanLissa@tilburguniversity.edu>
+Sent: Wednesday, May 13, 2026 2:55 AM
+To: Jonte Myers <jmyers45@gsu.edu>
+Cc: Therese Deocampo Pigott <tpigott@gsu.edu>
+Subject: [External] Re: Following Up — ML Methods in Meta-Analysis + Potential Collaboration
+ 
+Dear Jonté and Terri,
+
+Thank you for your email, I would be happy to contribute, although I am a bit concerned that the timeline might be tight and the holidays are coming up. Do you have some sense by when this would need to be done?
+
+What I envision doing:
+
+Reading up on the method
+Checking the code of MERF to understand its implementation
+Optionally: Conducting a simple simulation study to examing the behavior of these two methods under varying assumptions
+Writing up the results in a way that strengthens the manuscript and addresses the Reviewer's concerns.
+
+What do you think?
+
+Best,
+Caspar
+
+dr. Caspar J. Van Lissa | Associate professor, dept. Methodology & Statistics | PI of the INSIGHT Lab | Chair of the Open Science Community Tilburg | Board member of Tilburg Young Academy | Chair of the Theory Methods Society | 
+
+
+ 
+
+
+From: Jonte Myers <jmyers45@gsu.edu>
+Sent: Monday, May 11, 2026 10:02 PM
+To: Caspar van Lissa <C.J.vanLissa@tilburguniversity.edu>
+Cc: Therese Deocampo Pigott <tpigott@gsu.edu>
+Subject: Following Up — ML Methods in Meta-Analysis + Potential Collaboration
+ 
+Dear Caspar,
+
+My name is Jonte, Terri Pigott's colleague. I hope you are doing well. We corresponded briefly about a year ago regarding MetaForest, and I wanted to reach out again with a question that I think will genuinely interest you.
+
+Terri and I have a manuscript under review at Review of Educational Research examining sources of heterogeneity in mathematics fact-fluency interventions for students with mathematics difficulties. MetaForest is central to the analytic approach. We also implemented a multilevel random forest using the MERF framework (Hajjem, Bellavance, & Larocque, 2014) to explicitly model the nested structure of effect sizes within studies. A thoughtful reviewer raised a legitimate question about whether MERF, developed for clustered observational data, can be appropriately adapted to meta-analytic data, in which level-1 units are precision-weighted effect sizes with known sampling variances rather than raw observations.
+
+It is a genuinely interesting methodological question, and we believe you are the right person to weigh in. I am writing to ask two things:
+
+1. Whether you see a defensible path for adapting MERF to meta-analytic data, specifically addressing the known heteroscedastic error structure that MetaForest handles through its weighted resampling scheme, and if so, whether you would be willing to contribute to that argument as a co-author on the revision.
+
+2. If your view is that MetaForest is simply the more appropriate tool here, I would welcome that guidance as well and would be glad to discuss whether your involvement as a co-author could strengthen the methodological framing of the revised manuscript either way.
+
+I am happy to share the manuscript and reviewer comments if that would help. I am genuinely open to either direction; the priority is getting the methodology right.
+
+Thanks for considering this, Caspar.
+
+Best,
+Jonté
+
+Jonté Myers, Ph.D.
+Associate Professor, Department of Learning Sciences
+Georgia State University
+
+
+CAUTION: This email was sent from someone outside of the university. Do not click links or open attachments unless you recognize the sender and know the content is safe.

@@ -1,0 +1,36 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+res_brma|stem||2ea58a13a4ec258a|a47d13ac93f79e27|2056444925||t20594.7534417823s||0|rds|local|vector|||163.094|There were 826 divergent transitions after warmup. See https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup to find out why this is a problem and how to eliminate them.. Examine the pairs() plot to diagnose sampling problems . The largest R-hat is 1.42, indicating chains have not mixed. Running the chains for more iterations may help. See https://mc-stan.org/misc/warnings.html#r-hat. Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable. Running the chains for more iterations may help. See https://mc-stan.org/misc/warnings.html#bulk-ess. Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable. Running the chains for more iterations may help. See https://mc-stan.org/misc/warnings.html#tail-ess. There were 180 divergent transitions after warmup. See https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup to find out why this is a problem and how to eliminate them.. Examine the pairs() plot to diagnose sampling problems . Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable. Running the chains for more iterations may help. See https://mc-stan.org/misc/warnings.html#bulk-ess. Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable. Running the chains for more iterations may help. See https://mc-stan.org/misc/warnings.html#tail-ess. There were 215 divergent transitions after warmup. See https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup to find out why this is a problem and how to eliminate them.. Examine the pairs() plot to diagnose sampling problems . Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable. Running the chains for more iterations may help. See https://mc-stan.org/misc/warnings.html#bulk-ess. Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quanti|Could not construct a valid model.frame from argument 'newdata'.
+dat|stem|9f13cb59803b25eb|fa6449344bc86700|c385e65a6f625431|963459267||t20595.3288390818s|s7700b|7700|rds|local|vector|||0.04||
+res_metaforest|stem|b86934a0a67c6d16|a51279f254c6917a|8a86817761cc3689|931373781||t20595.3309914313s|s1352925b|1352925|rds|local|vector|||39.909||
+df|stem|cd93f17436518e0a|d492199923a9418a|408c27b9cd1dab55|1719518045||t20595.6509216074s|s4782b|4782|rds|local|vector|||0.071||
+res_mlrf|stem|580ca91b4898b8b3|568662a59cca32cb|4c9718591dffa3e3|-930624938||t20595.3364554475s||827530|rds|local|vector|||0.05||object 'dat' not found
+rsq_numeric|function|ccfc34aaf922961c
+moderator_list|object|4f42acfd152dbe2a
+.Random.seed|object|53c2663bd1633875
+mlrf|function|78019abae81d89a8
+interpret_model_lasso|function|ce43101251cee166
+interpret_model_metaforest|function|d36e3a974941f2e5
+make_balanced_folds|function|cd15caef81766850
+predict.mlrf|function|077713e632d4eeca
+load_data|function|a283d75de0994326
+make_balanced_folds2|function|b78ac49fcf064945
+create_folds|function|73ab3237200db597
+get_features|function|a78189af2f8c3ac0
+Xvalid_all_custom|function|18bf9709995417cc
+split_train_test|function|911db8cd8ec9ba36
+select_features|function|352b6777c0396bd5
+eval_results|function|2b797bcbcc4d6927
+print.FEmrt|function|6e49ce95efb082c1
+predictors|object|630adbc88621b069
+print.REmrt|function|9885a1dddb5e35ce
+make_bootstrap_split|function|f21ca3fc0b138a34
+impute_missings|function|f60e40aa39e39dba
+do_metacart|function|2d9b375bd06a7e6d
+do_tree|function|b04609fe8f35933d
+do_brma|function|c386a52f1bcf7d7d
+do_metaforest|function|aca37a8cc7f7a711
+do_glmnet|function|3d61922750191061
+do_mlrf|function|3c2021746a6d9f54
+rmert_custom|function|b9cbc0e407002382
+df_split|stem|26b67db150bca2ae|9f381b4d28faa402|ad512d8ca40e654c|-1589860070||t20595.6530646051s|s5606b|5606|rds|local|vector|||0.097||
+bootstrap_split|stem|06ed63e66e4627ca|0348e5bb494c7063|f3eca32218354c27|-1263002754||t20595.653072891s|s49b|49|rds|local|vector|||0.555||

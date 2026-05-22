@@ -1,0 +1,26 @@
+{
+    "id": "F00EABE5",
+    "path": "~/git_repositories/jonte_analysis/R/eval_results.R",
+    "project_path": "R/eval_results.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1779389445146.0,
+    "source_on_save": false,
+    "relative_order": 17,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "39,0",
+        "scrollLine": "32"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1779389531,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1779389531507,
+    "read_only": false,
+    "read_only_alternatives": []
+}

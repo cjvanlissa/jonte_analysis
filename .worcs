@@ -1,0 +1,6 @@
+worcs_version: 0.1.20
+creator: cjvanlissa
+entry_point: manuscript/manuscript.Rmd
+recipe:
+  recipe: rmarkdown::render('manuscript/manuscript.Rmd')
+  terminal: no
