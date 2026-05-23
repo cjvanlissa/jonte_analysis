@@ -1,6 +1,6 @@
 {
     "dialog-state": {
-        "query": "ES_ID",
+        "query": "glmnet",
         "path": "",
         "regex": false,
         "caseSensitive": false,
@@ -9,7 +9,7 @@
         "useGitGrep": true,
         "excludeGitIgnore": true,
         "excludeFilePatterns": [],
-        "resultsCount": 16,
+        "resultsCount": 18,
         "errorCount": 0,
         "replaceErrors": "",
         "projectRelative": true

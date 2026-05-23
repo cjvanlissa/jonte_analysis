@@ -2,11 +2,7 @@ do_metaforest <- function(dat, ...) {
   yvar = "yi"
   tuning_pars <- expand.grid(
     whichweights = c("random", "fixed", "unif"),
-    mtry = round(seq.int(
-      from = 1,
-      to = ceiling(.8 * ncol(dat$train)),
-      length.out = 10
-    )),
+    mtry = ceiling(exp(seq(log(1), log(ncol(dat$train)-4L), length.out = 10))),
     min.node.size = round(seq.int(
       from = 10,
       to = ceiling(.2 * nrow(dat$train)),

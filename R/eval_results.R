@@ -4,6 +4,39 @@ rsq_numeric <- function(obs, preds, mn){
   return(1 - rss/tss)
 }
 
+eval_results_single <- function(dat, models){
+
+models <- list(brma = res_brma, mf = res_metaforest, mlrf = res_mlrf)
+  rsqs_test <- list(
+    brma = pema:::predict.brma(models$brma, newdata = rbind(dat$train, dat$test), type = c("mean"))[-c(1:nrow(dat$train))],
+    mf = metaforest:::predict.MetaForest(models$mf, data = rbind(dat$train, dat$test))$predictions[-c(1:nrow(dat$train))],
+    mlrf = predict.mlrf(models$mlrf, newdata = df)[which(df$id_exp %in% df_split$test_id)]
+  )
+  rsqs_test <- sapply(models, `[[`, "rsq")
+
+  df_rsq <- data.frame(
+    mse = mses,
+    mse_se = mse_sds,
+    rsq_test = rsqs_test,
+    rsq_train = rsqs_train,
+    model = names(rsqs_test))
+
+  # Choose best model
+  #rsqs <- unlist(lapply(do.call(c, models), `[[`, "rsq"))
+  best_model <- df_rsq$model[which.min(df_rsq$mse)]
+
+  model = models[[best_model]]$res
+
+  return(
+    list(
+      rsqs = df_rsq,
+      best = best_model,
+      model = model
+      # , interpret = interpret
+    )
+  )
+}
+
 eval_results <- function(dat, models){
 
   mses <- sapply(models, function(x){

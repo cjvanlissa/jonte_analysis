@@ -33,22 +33,75 @@ mlrf <- function (formula, data, vi = "vi", study = NULL, whichweights = "random
   return(out)
 }
 
+mlrf <- function (formula, data, vi = "vi", study = NULL, whichweights = "random", num.trees = 500,
+          mtry = NULL, min.node.size = 5, method = "REML", ...)
+{
+  data$ES_ID <- 1:nrow(data)
+  v <- data[[vi]]
+  id <- data[[study]]
+  mf <- model.frame(formula = formula, data = data)
+  yi <- mf[[1]]
+  X <- model.matrix(formula, data)[, -1, drop = FALSE]
+  if(study %in% colnames(X)) X <- X[, !colnames(X) == study]
+  if(vi %in% colnames(X)) X <- X[, !colnames(X) == vi]
+  # Your exact 3-level meta-analytic model
+  m3 <- metafor::rma.mv(
+    yi = yi,
+    V  = v,
+    random = ~ 1 | id_exp/ES_ID,
+    data = data,
+    method = "REML"
+  )
+
+  resid <- residuals(m3, type = "response")
+  wts <- sqrt(1/v)
+
+  rf_mod <- ranger::ranger(
+    x = X,
+    y = yi,
+    case.weights = wts,
+    num.trees = num.trees,
+    importance = "permutation")
+
+  out <- list(m3 = m3, rf = rf_mod)
+  class(out) <- c("mlrf", class(out))
+  return(out)
+}
+
 predict.mlrf <- function(object, newdata = NULL, ...){
   predict(object[["m3"]])$pred + ranger:::predict.ranger(object[["rf"]], data = newdata, type = "response")$predictions
 }
 
-do_mlrf <- function(dat, yvar = "yi", ...) {
+do_mlrf <- function(dat, predictors, yvar = "yi", ...) {
+
+
+  # X <- model.matrix(as.formula(paste0(yvar, "~", paste0(predictors, collapse = " + "))), dat$train)[, -1]
+  # colnames(X) <- make.names(colnames(X))
+  X <- dat$train[, -which(names(dat$train) %in% c("yi", "vi", "id_exp"))]
+  X_holdout <- dat$test[, -which(names(dat$test) %in% c("yi", "vi", "id_exp"))]
+  # if(any(! colnames(X) %in% colnames(X_holdout))){
+  #   add_these <- matrix(0, ncol = sum(! colnames(X) %in% colnames(X_holdout)), nrow = nrow(X_holdout))
+  #   colnames(add_these) <- setdiff(colnames(X), colnames(X_holdout))
+  #   X_holdout <- cbind(X_holdout, add_these)
+  # }
+  # X_holdout <- X_holdout[, colnames(X)]
+
+
   Args <- list(
-    formula = as.formula(paste0(
-      yvar, "~", paste0(setdiff(names(dat$train), c(yvar, "vi", "id_exp")), collapse = " + ")
-    )),
-    data = dat$train,
+    formula = as.formula(paste0(yvar, "~", paste0(colnames(X), collapse = " + "))),
+    data = data.frame(dat$train[, c("yi", "vi", "id_exp")], X),
     study = "id_exp"
   )
+
   cv_rmses <- sapply(dat$fold_rownums, function(thisfold) {
-    Args$data = dat$train[-thisfold, ]
+    X_train <- X[-thisfold, ]
+    X_test <- X[thisfold, ]
+    Y_train <- dat$train$yi[-thisfold]
+    Y_test <- dat$train$yi[thisfold]
+
+    Args$data = data.frame(dat$train[-thisfold, c("yi", "vi", "id_exp")], X_train)
     fit_cv <- do.call(mlrf, Args)
-    preds <- predict.mlrf(fit_cv, newdata = dat$train[thisfold, ])
+    preds <- predict.mlrf(fit_cv, newdata = X_test)
     mean((dat$train$yi[thisfold] - preds)^2)
   })
 

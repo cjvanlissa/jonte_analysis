@@ -94,33 +94,29 @@ list(
     name = df_split,
     command = split_train_test(df, cluster_variable = "id_exp", train_size = .7)
   )
-  # , tar_target(
-  #   name = bootstrap_split,
-  #   command = make_bootstrap_split(df_split$train, predictors, p = .5, cluster_var = "id_exp", num_samples = 20, max_tries = 20000)
-  # )
-  # , tar_target(
-  #   name = dat,
-  #   command = create_folds(df_split, cluster_variable = "id_exp", k = 2)
-  # )
-  # , tar_target(
-  #   name = res_brma,
-  #   command = do_brma(dat, yvar = "yi", cluster_var = "id_exp") # cant get this to run, come back to it
-  # )
-  # , tar_target(
-  #  name = res_metaforest,
-  #  command = do_metaforest(dat)
-  # )
-  # , tar_target(
-  #   name = res_mlrf,
-  #   command = do_mlrf(dat, yvar = "yi")
-  # )
-  # , tar_target(
-  #   name = analysis_results,
-  #   command = eval_results(dat, models = list(brma = res_brma , metaforest = res_metaforest
-  #                                             , mlrf = res_mlrf
-  #                                             ))
-  # )
-  # , tarchetypes::tar_render(name = manuscript, path = "manuscript.rmd", output_file = "index.html", cue = tar_cue("always"))
+  , tar_target(
+    name = dat,
+    command = create_folds(df_split, cluster_variable = "id_exp", k = 2)
+  )
+  , tar_target(
+    name = res_brma,
+    command = do_brma(dat, yvar = "yi", cluster_var = "id_exp")
+  )
+  , tar_target(
+   name = res_metaforest,
+   command = do_metaforest(dat)
+  )
+  , tar_target(
+    name = res_mlrf,
+    command = do_mlrf(dat, yvar = "yi")
+  )
+  , tar_target(
+    name = analysis_results,
+    command = eval_results(dat, models = list(brma = res_brma , metaforest = res_metaforest
+                                              , mlrf = res_mlrf
+                                              ))
+  )
+  , tarchetypes::tar_render(name = manuscript, path = "manuscript.rmd", output_file = "index.html", cue = tar_cue("always"))
 )
 
 

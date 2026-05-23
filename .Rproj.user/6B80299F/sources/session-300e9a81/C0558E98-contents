@@ -1,43 +1,65 @@
 do_brma <- function(dat, yvar = "yi", cluster_var = "id_exp", ...){
-  browser()
   tuning_pars <- expand.grid(
     relevant_pars = 3#c(1, 3, 5, 7, 9)
   )
-
+  X <- model.matrix(as.formula(paste0(yvar, "~", paste0(setdiff(names(dat$train), c(yvar, "vi", cluster_var)), collapse = " + "))), dat$train)[, -1]
+  std <- list(center = rep(0, ncol(X)), scale = rep(1, ncol(X)))
   cv_rmses <- sapply(1:nrow(tuning_pars), function(i){
     sapply(dat$fold_rownums, function(thisfold){
+      X_train <- X[-thisfold, ]
+      X_test <- X[thisfold, ]
+      Y_train <- dat$train$yi[-thisfold]
+      Y_test <- dat$train$yi[thisfold]
       fit_cv <- pema::brma(
-        as.formula(paste0(yvar, "~", paste0(setdiff(names(dat$train), c(yvar, "vi", cluster_var)), collapse = " + "))),
-        data = dat$train[-thisfold, ],
-        study = "id_exp",
+        x = X_train,
+        y = Y_train,
+        vi = dat$train$vi[-thisfold],
+        study = dat$train$id_exp[-thisfold],
         method = "hs",
-        prior = c(relevant_pars = tuning_pars$relevant_pars[i])
-        #, ...
+        standardize = std,
+        prior = c(df = 1, df_global = 1,
+                  df_slab = 4, scale_global = 1, scale_slab = 2, relevant_pars = NULL),
+        intercept = TRUE
       )
-      preds <- pema:::predict.brma(fit_cv, newdata = dat$train[thisfold, ], type = c("mean"))
-      mean((dat$train[[yvar]][thisfold] - preds)^2)
+      preds <- pema:::predict.brma(fit_cv, newdata = X_test, type = c("mean"))
+      mean((Y_test - preds)^2)
     })
   })
 
   cvm <- colMeans(cv_rmses)
+
+  # std <- list(center = rep(0, ncol(X)), scale = rep(1, ncol(X)))
   best_model <- pema::brma(
-    formula = as.formula(paste0(yvar, "~", paste0(setdiff(names(dat$train), c(yvar, "vi", cluster_var)), collapse = " + "))),
-    data = dat$train,
-    study = cluster_var,
+    x = X,
+    y = dat$train$yi,
+    vi = dat$train$vi,
+    study = dat$train$id_exp,
     method = "hs",
-    prior = c(relevant_pars = tuning_pars$relevant_pars[which.min(cvm)]),
-    ...
+    standardize = std,
+    prior = c(df = 1, df_global = 1,
+              df_slab = 4, scale_global = 1, scale_slab = 2, relevant_pars = NULL),
+    intercept = TRUE
   )
-  pred <- pema:::predict.brma(best_model, newdata = dat$test, type = c("mean"))
-  pred_train <- pema:::predict.brma(best_model, newdata = dat$train, type = c("mean"))
+
+  X_holdout <- model.matrix(as.formula(paste0(yvar, "~", paste0(setdiff(names(dat$train), c(yvar, "vi", cluster_var)), collapse = " + "))), dat$test)[, -1]
+  if(any(! colnames(X) %in% colnames(X_holdout))){
+    add_these <- matrix(0, ncol = sum(! colnames(X) %in% colnames(X_holdout)), nrow = nrow(X_holdout))
+    colnames(add_these) <- setdiff(colnames(X), colnames(X_holdout))
+    X_holdout <- cbind(X_holdout, add_these)
+  }
+  X_holdout <- X_holdout[, colnames(X)]
+
+  preds <- pema:::predict.brma(best_model, newdata = X_holdout, type = c("mean"))
+
+  pred_train <- pema:::predict.brma(best_model, newdata = X, type = c("mean"))
   out <- list(
     res_cv = cv_rmses,
     res = best_model,
     tune_pars = as.vector(tuning_pars[which.min(cvm), , drop = FALSE]),
     mse_cv = c(cvm = min(cvm),
                cvsd = sd(cv_rmses[, which.min(cvm)])),
-    rsq = rsq_numeric(dat$test$conspiracy, as.numeric(pred), mean(dat$train$conspiracy)),
-    rsq_train = rsq_numeric(dat$train$conspiracy, as.numeric(pred_train), mean(dat$train$conspiracy))
+    rsq = rsq_numeric(dat$test$yi, as.numeric(preds), mean(dat$train$yi)),
+    rsq_train = rsq_numeric(dat$train$yi, as.numeric(pred_train), mean(dat$train$yi))
   )
   class(out) <- "res_brma"
   return(out)

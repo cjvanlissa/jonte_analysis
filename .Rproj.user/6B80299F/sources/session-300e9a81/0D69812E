@@ -1,26 +1,26 @@
 {
-    "id": "C0558E98",
+    "id": "0D69812E",
     "path": "~/git_repositories/jonte_analysis/R/brma.R",
     "project_path": "R/brma.R",
     "type": "r_source",
     "hash": "0",
     "contents": "",
-    "dirty": true,
-    "created": 1779386645779.0,
+    "dirty": false,
+    "created": 1779469635505.0,
     "source_on_save": false,
-    "relative_order": 15,
+    "relative_order": 22,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "8,6",
+        "cursorPosition": "2,87",
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1779390171,
+    "lastKnownWriteTime": 1779519948,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1779438767624,
+    "last_content_update": 1779519948379,
     "read_only": false,
     "read_only_alternatives": []
 }
