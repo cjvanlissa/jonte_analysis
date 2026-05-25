@@ -46,3 +46,13 @@ knitr::kable(tab_res, digits = 2)
 
 The best performing model (or interpretable model whose cross-validated mean squared error was within 1SE of the best model's cross-validated mean squared error) is `r temp_env[["analysis_results"]][["best"]]`.
 
+Below are the results for the final model, estimated on the complete dataset using optimal tuning parameters determined via cross-validation:
+
+
+
+```{r}
+tar_load(final_model)
+knitr::kable(final_model$coefficients, digits = 2)
+```
+
+
