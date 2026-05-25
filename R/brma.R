@@ -1,12 +1,19 @@
 do_brma <- function(dat, yvar = "yi", cluster_var = "id_exp", ...){
   tuning_pars <- expand.grid(
-    relevant_pars = ceiling(exp(seq(log(1), log(ncol(dat$train)-4L), length.out = 10)))
+    relevant_pars = ceiling(exp(seq(log(1), log(ncol(dat$train)-4L), length.out = 10))),
+    interactions = c(FALSE, TRUE)
   )
   # X <- model.matrix(as.formula(paste0(yvar, "~", paste0(setdiff(names(dat$train), c(yvar, "vi", cluster_var)), collapse = " + "))), dat$train)[, -1]
   X <- dat$train[, -which(names(dat$train) %in% c("yi", "vi", "id_exp"))]
-  std <- list(center = rep(0, ncol(X)), scale = rep(1, ncol(X)))
+  X2 <- model.matrix( ~.^2, data=X)[, -1]
   cv_rmses <- sapply(1:nrow(tuning_pars), function(i){
     sapply(dat$fold_rownums, function(thisfold){
+      if(tuning_pars$interactions[i]){
+        X <- X2
+      } else {
+        X <- X
+      }
+      std <- list(center = rep(0, ncol(X)), scale = rep(1, ncol(X)))
       X_train <- X[-thisfold, ]
       X_test <- X[thisfold, ]
       Y_train <- dat$train$yi[-thisfold]
@@ -30,6 +37,12 @@ do_brma <- function(dat, yvar = "yi", cluster_var = "id_exp", ...){
   cvm <- colMeans(cv_rmses)
 
   # std <- list(center = rep(0, ncol(X)), scale = rep(1, ncol(X)))
+  if(tuning_pars$interactions[which.min(cvm)]){
+    X <- X2
+  } else {
+    X <- X
+  }
+  std <- list(center = rep(0, ncol(X)), scale = rep(1, ncol(X)))
   best_model <- pema::brma(
     x = X,
     y = dat$train$yi,
@@ -69,6 +82,12 @@ do_brma <- function(dat, yvar = "yi", cluster_var = "id_exp", ...){
 
 final_brma <- function(df, res_brma){
   X <- df[, -which(names(df) %in% c("yi", "vi", "id_exp"))]
+  X2 <- model.matrix( ~.^2, data=X)[, -1]
+  if(res_brma$tune_pars$interactions){
+    X <- X2
+  } else {
+    X <- X
+  }
   std <- list(center = rep(0, ncol(X)), scale = rep(1, ncol(X)))
   pema::brma(
     x = X,
