@@ -1,7 +1,6 @@
 load_data <- function(predictors){
-  dat <- readxl::read_excel("Metadat2.xlsx", sheet = "Sheet1", skip = 1)
+  dat <- readxl::read_excel("Metadata_2026.xlsx", sheet = 1)
   dat$id_exp = factor(dat$id_exp)
-
 
   mat_preds <- dat[predictors]
   mat_preds <- lapply(mat_preds, factor)

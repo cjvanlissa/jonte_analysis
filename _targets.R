@@ -11,29 +11,6 @@ library(dplyr)
 library(parallel)
 library(data.table)
 # library(tarchetypes) # Load other packages as needed.
-moderator_list <- list(
-  id_vars = c("ArticleID", "bivarRel"), #, "effectID", "Var1Locate",
-  HOF_4 = c("HOF_indivCol", "HOF_masFem", "HOF_powerDist", "HOF_uncertain"),
-  HOF_6 = c("HOF_indivCol", "HOF_masFem", "HOF_powerDist", "HOF_uncertain", "HOF_longTerm", "HOF_indulge"),
-  Taras_OMNI = c("IND_TarasOmni_d", "MAS_TarasOmni_d", "PD_TarasOmni_d", "UA_TarasOmni_d"),
-  GLOBE_Values = c("GLOBE_VALU_UA", "GLOBE_VALU_FO", "GLOBE_VALU_PD", "GLOBE_VALU_IC", "GLOBE_VALU_HO", "GLOBE_VALU_PO", "GLOBE_VALU_IGC", "GLOBE_VALU_GE", "GLOBE_VALU_AS"),
-  GLOBE_Practices = c("GLOBE_PRAC_UA", "GLOBE_PRAC_FO", "GLOBE_PRAC_PD", "GLOBE_PRAC_IC", "GLOBE_PRAC_HO", "GLOBE_PRAC_PO", "GLOBE_PRAC_IGC", "GLOBE_PRAC_GE", "GLOBE_PRAC_AS"),
-  Globe_Values_Practices = c("GLOBE_VALU_UA", "GLOBE_VALU_FO", "GLOBE_VALU_PD", "GLOBE_VALU_IC", "GLOBE_VALU_HO", "GLOBE_VALU_PO", "GLOBE_VALU_IGC", "GLOBE_VALU_GE", "GLOBE_VALU_AS", "GLOBE_PRAC_UA", "GLOBE_PRAC_FO", "GLOBE_PRAC_PD", "GLOBE_PRAC_IC", "GLOBE_PRAC_HO", "GLOBE_PRAC_PO", "GLOBE_PRAC_IGC", "GLOBE_PRAC_GE", "GLOBE_PRAC_AS"),
-  SVS = c("SVS_harmony", "SVS_embedded", "SVS_hierarchy", "SVS_mastery", "SVS_aff.auton", "SVS_intel.auton", "SVS_egalitar"),
-  RS = "RS_cluster",
-  M49 = "M49_subregion",
-  Taras_Yearly = c("tarasYearly_PD","tarasYearly_IND","tarasYearly_MAS","tarasYearly_UA"),
-  PubYear = "PubYear",
-  economic = c("birth_rate", "Civil_Freedom", "death_rate", "inflation",
-               "life_expect", "population_log", "pop_growth", "Political_Freedom",
-               "GDP_Per_Cap_log", "HDI", "LTU")
-)
-
-
-
-# NOTE: updated dataset, e.g., Field_data_with_sample_level_student.csv, cultural variables are scaled, _raw are unscaled
-
-
 #vars
 #colnames(df)
 # Set target options:
@@ -77,11 +54,16 @@ tar_option_set(
 tar_source() # for some reason this adds var1Locate back to the moderator list
 # tar_source("other_functions.R") # Source other scripts as needed.
 
-predictors <- c("I_ILI", "I_MD", "I_CM", "I_SC", "I_NL",
-                "I_SF", "I_CA", "I_TF", "I_UF", "I_GM", "I_WP", "I_GP", "I_IP",
-                "I_CF", "I_EC", "I_IN", "I_SD", "CRIT", "ETH", "GEN", "IMP",
-                "DES", "ASSN", "CTRL", "CTRY", "ERA", "MEA", "FOI", "FUND", "SET",
-                "GRP", "FRQ", "SESS", "DUR", "GRD", "OPER", "OUT")
+predictors <- c(
+  # Non-instructional (17)
+  "Pub.Year", "Design", "Control", "Criteria", "Gender", "Ethnicty",
+  "Implementer", "Setting", "Group", "Frequency", "Sessions", "Duration",
+  "FOI", "Funded", "Measure", "Operation", "Outcome",
+  # Instructional (13)
+  "Interv.Led Inst", "Explicit.In", "Concrete Rep.", "Mult.Rep",
+  "Specific Facts", "Counting Alg.Inst.", "Timed Fluency", "Untimed Fluency",
+  "Games", "Indep.Prac.", "Corr.Feedback", "Err.Corr.Proc.", "Incentives"
+)
 
 set.seed(7218)
 # Replace the target list below with your own:
@@ -115,6 +97,10 @@ list(
     command = eval_results(dat, models = list(brma = res_brma , metaforest = res_metaforest
                                               , mlrf = res_mlrf
                                               ))
+  )
+  , tar_target(
+    name = final_model,
+    command = final_brma(df, res_brma)
   )
   , tarchetypes::tar_render(name = manuscript, path = "manuscript.rmd", output_file = "index.html", cue = tar_cue("always"))
 )

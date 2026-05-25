@@ -18,9 +18,9 @@ do_brma <- function(dat, yvar = "yi", cluster_var = "id_exp", ...){
         study = dat$train$id_exp[-thisfold],
         method = "hs",
         standardize = std,
-        prior = c(df = 1, df_global = 1,
-                  df_slab = 4, scale_global = 1, scale_slab = 2, relevant_pars = NULL),
-        intercept = TRUE
+        prior = c(relevant_pars = tuning_pars$relevant_pars[i]),
+        intercept = TRUE,
+        iter = 5000
       )
       preds <- pema:::predict.brma(fit_cv, newdata = X_test, type = c("mean"))
       mean((Y_test - preds)^2)
@@ -37,9 +37,9 @@ do_brma <- function(dat, yvar = "yi", cluster_var = "id_exp", ...){
     study = dat$train$id_exp,
     method = "hs",
     standardize = std,
-    prior = c(df = 1, df_global = 1,
-              df_slab = 4, scale_global = 1, scale_slab = 2, relevant_pars = NULL),
-    intercept = TRUE
+    prior = c(relevant_pars = tuning_pars$relevant_pars[which.min(cvm)]),
+    intercept = TRUE,
+    iter = 5000
   )
 
   #X_holdout <- model.matrix(as.formula(paste0(yvar, "~", paste0(setdiff(names(dat$train), c(yvar, "vi", cluster_var)), collapse = " + "))), dat$test)[, -1]
@@ -65,4 +65,20 @@ do_brma <- function(dat, yvar = "yi", cluster_var = "id_exp", ...){
   )
   class(out) <- "res_brma"
   return(out)
+}
+
+final_brma <- function(df, res_brma){
+  X <- df[, -which(names(df) %in% c("yi", "vi", "id_exp"))]
+  std <- list(center = rep(0, ncol(X)), scale = rep(1, ncol(X)))
+  pema::brma(
+    x = X,
+    y = df$yi,
+    vi = df$vi,
+    study = df$id_exp,
+    method = "hs",
+    standardize = std,
+    prior = c(relevant_pars = res_brma$tune_pars$relevant_pars),
+    intercept = TRUE,
+    iter = 5000
+  )
 }

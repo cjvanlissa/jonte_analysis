@@ -23,7 +23,7 @@ models <- list(brma = res_brma, mf = res_metaforest, mlrf = res_mlrf)
 
   # Choose best model
   #rsqs <- unlist(lapply(do.call(c, models), `[[`, "rsq"))
-  best_model <- df_rsq$model[which.min(df_rsq$mse)]
+  best_model <- df_rsq$model[which.max(df_rsq$rsq_test)]
 
   model = models[[best_model]]$res
 
@@ -66,7 +66,7 @@ eval_results <- function(dat, models){
 
   # Choose best model
   #rsqs <- unlist(lapply(do.call(c, models), `[[`, "rsq"))
-  best_model <- df_rsq$model[which.min(df_rsq$mse)]
+  best_model <- df_rsq$model[which.max(df_rsq$rsq_test)]
 
   model = models[[best_model]]$res
 
